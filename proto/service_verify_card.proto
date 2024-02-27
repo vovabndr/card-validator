@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/vovabndr/card-validator/pb";
+
+import "rpc_verify_card.proto";
+import "google/api/annotations.proto";
+
+service CardValidator {
+  rpc VerifyCard (VerifyCardRequest) returns (VerifyCardResponse) {
+    option (google.api.http) = {
+      post: "/v1/verify_card"
+      body: "*"
+    };
+  }
+}

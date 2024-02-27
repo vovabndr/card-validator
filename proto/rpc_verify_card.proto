@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/vovabndr/card-validator/pb";
+
+import "payment_card.proto";
+
+message VerifyCardRequest {
+    PaymentCard card = 1;
+}
+
+message VerifyCardResponse {
+  bool valid = 1;
+}
