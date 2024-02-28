@@ -12,4 +12,11 @@ proto:
 		--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
 		proto/*.proto
 
-.PHONY: server test proto
+docker_pull:
+	docker pull alpine:latest
+	docker pull golang:1.22-alpine
+
+docker_run:
+	docker compose up
+
+.PHONY: server test proto docker docker_run
