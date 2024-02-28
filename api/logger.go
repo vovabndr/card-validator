@@ -15,7 +15,7 @@ func GrpcLogger(
 	req any,
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
-) (resp any, err error) {
+) (any, error) {
 	start := time.Now()
 	result, err := handler(ctx, req)
 	duration := time.Since(start)
@@ -37,6 +37,8 @@ func GrpcLogger(
 		Int("status_code", int(statusCode)).
 		Str("status_text", statusCode.String()).
 		Dur("duration", duration).
+		Any("request", req).
+		Any("response", result).
 		Msg("received a gRPC request")
 
 	return result, err

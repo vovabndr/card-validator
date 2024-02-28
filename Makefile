@@ -2,7 +2,7 @@ server:
 	go run main.go
 
 test:
-	go test -v -cover -short ./...
+	go test -v -cover ./...
 
 proto:
 	rm -f pb/*.go

@@ -2,20 +2,22 @@ package api
 
 import (
 	"context"
-	"github.com/rs/zerolog/log"
 	"github.com/vovabndr/card-validator/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (server *Server) VerifyCard(ctx context.Context, req *pb.VerifyCardRequest) (*pb.VerifyCardResponse, error) {
+	card := toDomain(req.GetCard())
 
-	card := req.GetCard()
+	isValid, err := server.validationService.Validate(card)
 
-	log.Info().
-		Any("card", card).
-		Msg("received request")
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "message: %s", err)
+	}
 
 	response := &pb.VerifyCardResponse{
-		Valid: false,
+		Valid: isValid,
 	}
 
 	return response, nil

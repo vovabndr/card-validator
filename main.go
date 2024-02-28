@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/vovabndr/card-validator/api"
+	"github.com/vovabndr/card-validator/domain"
 	"github.com/vovabndr/card-validator/pb"
 	"github.com/vovabndr/card-validator/utils"
 	"golang.org/x/sync/errgroup"
@@ -41,8 +42,14 @@ func main() {
 
 	waitGroup, ctx := errgroup.WithContext(ctx)
 
-	runGrpcServer(ctx, waitGroup, config)
-	runGatewayServer(ctx, waitGroup, config)
+	paymentSystems := []domain.PaymentSystem{
+		domain.NewMastercardPaymentSystem(),
+		domain.NewVisaPaymentSystem(),
+	}
+	validationService := domain.NewCardValidationService(paymentSystems)
+
+	runGrpcServer(ctx, waitGroup, config, validationService)
+	runGatewayServer(ctx, waitGroup, config, validationService)
 
 	err = waitGroup.Wait()
 	if err != nil {
@@ -50,11 +57,13 @@ func main() {
 	}
 }
 
-func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, config utils.Config) {
-	server, err := api.NewServer()
-	if err != nil {
-		log.Fatal().Msg("Couldn't create server")
-	}
+func runGrpcServer(
+	ctx context.Context,
+	waitGroup *errgroup.Group,
+	config utils.Config,
+	service *domain.CardValidationService,
+) {
+	server := api.NewServer(service)
 
 	logger := grpc.UnaryInterceptor(api.GrpcLogger)
 	grpcServer := grpc.NewServer(logger)
@@ -88,11 +97,13 @@ func runGrpcServer(ctx context.Context, waitGroup *errgroup.Group, config utils.
 	})
 }
 
-func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config utils.Config) {
-	server, err := api.NewServer()
-	if err != nil {
-		log.Fatal().Msg("Couldn't create server")
-	}
+func runGatewayServer(
+	ctx context.Context,
+	waitGroup *errgroup.Group,
+	config utils.Config,
+	service *domain.CardValidationService,
+) {
+	server := api.NewServer(service)
 
 	jsonOption := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
 		MarshalOptions: protojson.MarshalOptions{
@@ -106,7 +117,7 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 
 	grpcMux := runtime.NewServeMux(jsonOption)
 
-	err = pb.RegisterCardValidatorHandlerServer(ctx, grpcMux, server)
+	err := pb.RegisterCardValidatorHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal().Msg("Couldn't register handler server")
 	}
