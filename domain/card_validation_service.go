@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/vovabndr/card-validator/domain/val"
+	"github.com/vovabndr/card-validator/domain/validators"
 )
 
 type CardValidationService interface {
@@ -20,7 +20,7 @@ func NewCardValidationService() CardValidationService {
 }
 
 func (service *PaymentCardValidationService) Validate(card PaymentCard) (bool, error) {
-	err := val.ValidateDate(card.ExpirationMonth, card.ExpirationYear)
+	err := validators.ValidateDate(card.ExpirationMonth, card.ExpirationYear)
 	if err != nil {
 		return false, err
 	}
@@ -41,7 +41,7 @@ func (service *PaymentCardValidationService) Validate(card PaymentCard) (bool, e
 		return false, err
 	}
 
-	err = val.ValidateLuhn(card.CardNumber)
+	err = validators.ValidateLuhn(card.CardNumber)
 	if err != nil {
 		return false, err
 	}

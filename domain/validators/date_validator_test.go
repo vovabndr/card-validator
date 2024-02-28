@@ -1,4 +1,4 @@
-package val
+package validators
 
 import (
 	"github.com/stretchr/testify/require"

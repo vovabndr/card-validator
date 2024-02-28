@@ -15,14 +15,13 @@ func (server *Server) VerifyCard(ctx context.Context, req *pb.VerifyCardRequest)
 	isValid, err := server.validationService.Validate(card)
 
 	if errors.Is(err, domain.ErrNoPaymentSystem) {
-		return nil, status.Errorf(codes.Unimplemented, "message: %s", err)
+		return nil, status.Errorf(codes.InvalidArgument, "message: %s", err)
 	}
 
 	response := &pb.VerifyCardResponse{Valid: isValid}
 
 	if err != nil {
 		response.Error = &pb.VerifyCardErrorResponse{
-			Code:    int64(codes.InvalidArgument),
 			Message: err.Error(),
 		}
 	}

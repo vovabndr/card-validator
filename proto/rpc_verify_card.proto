@@ -11,7 +11,6 @@ message VerifyCardRequest {
 }
 
 message VerifyCardErrorResponse {
-    int64 code = 1;
     string message = 2;
 }
 
