@@ -17,6 +17,9 @@ func (mc *MastercardPaymentSystem) Name() string {
 
 func (mc *MastercardPaymentSystem) MatchBin(card PaymentCard) bool {
 	str := strconv.Itoa(card.CardNumber)
+	if len(str) < 2 {
+		return false
+	}
 	firstTwoChars := str[:2]
 	firstTwoDigits, err := strconv.Atoi(firstTwoChars)
 	if err != nil {

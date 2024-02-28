@@ -16,6 +16,9 @@ func (visa *VisaPaymentSystem) Name() string {
 
 func (visa *VisaPaymentSystem) MatchBin(card PaymentCard) bool {
 	str := strconv.Itoa(card.CardNumber)
+	if len(str) < 1 {
+		return false
+	}
 	return str[0] == '4'
 }
 
