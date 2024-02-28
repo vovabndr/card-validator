@@ -5,7 +5,7 @@ import (
 	"github.com/vovabndr/card-validator/pb"
 )
 
-func toDomain(card *pb.PaymentCard) domain.PaymentCard {
+func toDomain(card *pb.VerifyCardRequest) domain.PaymentCard {
 	return domain.PaymentCard{
 		CardNumber:      int(card.GetCardNumber()),
 		ExpirationMonth: int(card.GetExpirationMonth()),

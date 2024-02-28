@@ -4,12 +4,18 @@ package pb;
 
 option go_package = "github.com/vovabndr/card-validator/pb";
 
-import "payment_card.proto";
-
 message VerifyCardRequest {
-    PaymentCard card = 1;
+  int64 card_number = 1;
+  int64 expiration_month = 2;
+  int64 expiration_year = 3;
+}
+
+message VerifyCardErrorResponse {
+    int64 code = 1;
+    string message = 2;
 }
 
 message VerifyCardResponse {
   bool valid = 1;
+  optional VerifyCardErrorResponse error = 2;
 }

@@ -15,22 +15,22 @@ func TestIsDateValid(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want bool
+		err  error
 	}{
 		{
 			name: "current date",
 			args: args{month: int(time.Now().Month()), year: time.Now().Year()},
-			want: true,
+			err:  nil,
 		},
 		{
 			name: "invalid month",
 			args: args{month: 13, year: time.Now().Year()},
-			want: false,
+			err:  errInvalidMonth,
 		},
 		{
 			name: "invalid year",
 			args: args{month: int(time.Now().Month()), year: 0},
-			want: false,
+			err:  errInvalidYear,
 		},
 		{
 			name: "previous month",
@@ -38,17 +38,17 @@ func TestIsDateValid(t *testing.T) {
 				previousMonth := time.Now().AddDate(0, -1, 0)
 				return args{month: int(previousMonth.Month()), year: previousMonth.Year()}
 			}(),
-			want: false,
+			err: errCardExpired,
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			err := ValidateDate(tc.args.month, tc.args.year)
-			if tc.want {
+			if tc.err == nil {
 				require.NoError(t, err)
 			} else {
-				require.Error(t, err)
+				require.EqualError(t, err, tc.err.Error())
 			}
 		})
 	}

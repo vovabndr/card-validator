@@ -10,7 +10,7 @@ import "google/api/annotations.proto";
 service CardValidator {
   rpc VerifyCard (VerifyCardRequest) returns (VerifyCardResponse) {
     option (google.api.http) = {
-      post: "/v1/verify_card"
+      post: "/v1/card/verify"
       body: "*"
     };
   }

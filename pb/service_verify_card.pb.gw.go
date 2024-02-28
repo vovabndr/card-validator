@@ -71,7 +71,7 @@ func RegisterCardValidatorHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.CardValidator/VerifyCard", runtime.WithHTTPPathPattern("/v1/verify_card"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.CardValidator/VerifyCard", runtime.WithHTTPPathPattern("/v1/card/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -135,7 +135,7 @@ func RegisterCardValidatorHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.CardValidator/VerifyCard", runtime.WithHTTPPathPattern("/v1/verify_card"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.CardValidator/VerifyCard", runtime.WithHTTPPathPattern("/v1/card/verify"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -155,7 +155,7 @@ func RegisterCardValidatorHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
-	pattern_CardValidator_VerifyCard_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "verify_card"}, ""))
+	pattern_CardValidator_VerifyCard_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "card", "verify"}, ""))
 )
 
 var (

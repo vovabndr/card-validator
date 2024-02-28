@@ -42,11 +42,7 @@ func main() {
 
 	waitGroup, ctx := errgroup.WithContext(ctx)
 
-	paymentSystems := []domain.PaymentSystem{
-		domain.NewMastercardPaymentSystem(),
-		domain.NewVisaPaymentSystem(),
-	}
-	validationService := domain.NewCardValidationService(paymentSystems)
+	validationService := domain.NewCardValidationService()
 
 	runGrpcServer(ctx, waitGroup, config, validationService)
 	runGatewayServer(ctx, waitGroup, config, validationService)

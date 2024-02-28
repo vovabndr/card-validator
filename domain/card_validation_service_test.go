@@ -58,7 +58,7 @@ func TestPaymentCardValidationService_Validate(t *testing.T) {
 				ExpirationYear:  year,
 			}},
 			want:    false,
-			wantErr: errNoPaymentSystem,
+			wantErr: ErrNoPaymentSystem,
 		},
 	}
 

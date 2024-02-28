@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -25,7 +24,7 @@ func (visa *VisaPaymentSystem) Validate(card PaymentCard) error {
 	length := len(str)
 
 	if length != 13 && length != 16 {
-		return fmt.Errorf("invalid card of %s", visa.Name())
+		return errInvalidLength
 	}
 
 	return nil
