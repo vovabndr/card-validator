@@ -7,10 +7,10 @@ import (
 
 type Server struct {
 	pb.UnimplementedCardValidatorServer
-	validationService *domain.CardValidationService
+	validationService domain.CardValidationService
 }
 
-func NewServer(service *domain.CardValidationService) *Server {
+func NewServer(service domain.CardValidationService) *Server {
 	server := &Server{validationService: service}
 	return server
 }

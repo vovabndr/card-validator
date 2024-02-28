@@ -61,7 +61,7 @@ func runGrpcServer(
 	ctx context.Context,
 	waitGroup *errgroup.Group,
 	config utils.Config,
-	service *domain.CardValidationService,
+	service domain.CardValidationService,
 ) {
 	server := api.NewServer(service)
 
@@ -101,7 +101,7 @@ func runGatewayServer(
 	ctx context.Context,
 	waitGroup *errgroup.Group,
 	config utils.Config,
-	service *domain.CardValidationService,
+	service domain.CardValidationService,
 ) {
 	server := api.NewServer(service)
 

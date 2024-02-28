@@ -1,8 +1,16 @@
-package domain
+package val
 
-import "strconv"
+import (
+	"errors"
+	"strconv"
+)
 
-func ValidateLuhn(number int) bool {
+var (
+	errInvalidCardLength = errors.New("invalid card length")
+	ErrFailLuhn          = errors.New("card hasn't pass Luhn algorithm")
+)
+
+func ValidateLuhn(number int) error {
 	var sum int
 	var alternate bool
 
@@ -10,7 +18,7 @@ func ValidateLuhn(number int) bool {
 	numberLen := len(str)
 
 	if numberLen < 13 || numberLen > 19 {
-		return false
+		return errInvalidCardLength
 	}
 
 	for i := numberLen - 1; i > -1; i-- {
@@ -27,5 +35,9 @@ func ValidateLuhn(number int) bool {
 		sum += mod
 	}
 
-	return sum%10 == 0
+	if sum%10 == 0 {
+		return nil
+	} else {
+		return ErrFailLuhn
+	}
 }

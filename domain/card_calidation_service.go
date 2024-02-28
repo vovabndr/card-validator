@@ -3,27 +3,36 @@ package domain
 import (
 	"errors"
 	"github.com/rs/zerolog/log"
+	"github.com/vovabndr/card-validator/domain/val"
 )
 
-type CardValidationService struct {
+var (
+	errNoPaymentSystem = errors.New("card doesn't match any existing payment system")
+)
+
+type CardValidationService interface {
+	Validate(card PaymentCard) (bool, error)
+}
+
+type PaymentCardValidationService struct {
 	paymentSystems []PaymentSystem
 }
 
-func NewCardValidationService(paymentSystems []PaymentSystem) *CardValidationService {
-	return &CardValidationService{
+func NewCardValidationService(paymentSystems []PaymentSystem) CardValidationService {
+	return &PaymentCardValidationService{
 		paymentSystems: paymentSystems,
 	}
 }
 
-func (service *CardValidationService) Validate(card PaymentCard) (bool, error) {
-	err := ValidateDate(card.ExpirationMonth, card.ExpirationYear)
+func (service *PaymentCardValidationService) Validate(card PaymentCard) (bool, error) {
+	err := val.ValidateDate(card.ExpirationMonth, card.ExpirationYear)
 	if err != nil {
 		return false, err
 	}
 
-	ok := ValidateLuhn(card.CardNumber)
-	if !ok {
-		return false, errors.New("card hasn't pass Luhn algorithm")
+	err = val.ValidateLuhn(card.CardNumber)
+	if err != nil {
+		return false, err
 	}
 
 	for _, system := range service.paymentSystems {
@@ -38,5 +47,5 @@ func (service *CardValidationService) Validate(card PaymentCard) (bool, error) {
 		}
 	}
 
-	return false, errors.New("card doesn't match any existing payment system")
+	return false, errNoPaymentSystem
 }

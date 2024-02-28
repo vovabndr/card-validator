@@ -1,4 +1,4 @@
-package domain
+package val
 
 import (
 	"errors"
