@@ -1,22 +1,32 @@
 package domain
 
-type VisaPaymentSystem struct {
-}
+import (
+	"fmt"
+	"strconv"
+)
+
+type VisaPaymentSystem struct{}
 
 func NewVisaPaymentSystem() PaymentSystem {
 	return &VisaPaymentSystem{}
 }
 
-func (v VisaPaymentSystem) Name() string {
+func (visa *VisaPaymentSystem) Name() string {
 	return "Visa"
 }
 
-func (v VisaPaymentSystem) MatchBin(card PaymentCard) bool {
-	//TODO implement me
-	panic("implement me")
+func (visa *VisaPaymentSystem) MatchBin(card PaymentCard) bool {
+	str := strconv.Itoa(card.CardNumber)
+	return str[0] == '4'
 }
 
-func (v VisaPaymentSystem) Validate(card PaymentCard) error {
-	//TODO implement me
-	panic("implement me")
+func (visa *VisaPaymentSystem) Validate(card PaymentCard) error {
+	str := strconv.Itoa(card.CardNumber)
+	length := len(str)
+
+	if length != 13 && length != 16 {
+		return fmt.Errorf("invalid card of %s", visa.Name())
+	}
+
+	return nil
 }

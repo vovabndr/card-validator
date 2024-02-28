@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+var (
+	errInvalidMonth = errors.New("invalid month")
+	errCardExpired  = errors.New("credit card has expired")
+)
+
 func ValidateDate(month int, year int) error {
 	timeNow := time.Now().UTC()
 
@@ -12,15 +17,15 @@ func ValidateDate(month int, year int) error {
 	currentMonth := int(timeNow.Month())
 
 	if month < 1 || 12 < month {
-		return errors.New("invalid month")
+		return errInvalidMonth
 	}
 
 	if year < currentYear {
-		return errors.New("credit card has expired")
+		return errCardExpired
 	}
 
 	if year == currentYear && month < currentMonth {
-		return errors.New("credit card has expired")
+		return errCardExpired
 	}
 
 	return nil

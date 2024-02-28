@@ -1,6 +1,9 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+	"github.com/rs/zerolog/log"
+)
 
 type CardValidationService struct {
 	paymentSystems []PaymentSystem
@@ -23,5 +26,17 @@ func (service *CardValidationService) Validate(card PaymentCard) (bool, error) {
 		return false, errors.New("card hasn't pass Luhn algorithm")
 	}
 
-	return true, nil
+	for _, system := range service.paymentSystems {
+		if system.MatchBin(card) {
+			log.Info().Msgf("matched card by BIN as %s", system.Name())
+
+			if err = system.Validate(card); err != nil {
+				return false, err
+			}
+
+			return true, nil
+		}
+	}
+
+	return false, errors.New("card doesn't match any existing payment system")
 }
