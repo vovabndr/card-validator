@@ -16,7 +16,4 @@ docker_pull:
 	docker pull alpine:latest
 	docker pull golang:1.22-alpine
 
-docker_run:
-	docker compose up
-
-.PHONY: server test proto docker docker_run
+.PHONY: server test proto docker_pull
